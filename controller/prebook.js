@@ -142,7 +142,7 @@ exports.createPrebook = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      data: newPrebook,
+      message: "Prebook created successfully",
     });
   } catch (err) {
     res.status(500).json({ msg: err.message });
