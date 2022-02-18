@@ -18,13 +18,15 @@ const FrontdeskSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["Building Frontdesk", "ACA Front Desk"],
-    default: "ACA Front Desk",
   },
   password: {
     type: String,
     required: [true, "Please add a password"],
     minlength: 6,
+  },
+  isSuperAdmin: {
+    type: Boolean,
+    default: false,
   },
   resetPasswordToken: { type: String },
   resetPasswordExpire: { type: Date },
