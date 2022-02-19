@@ -6,10 +6,14 @@ const VisitorSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please add name"],
     },
+    title: {
+      type: String,
+      // required: [true, "Please add name"],
+    },
     groupMembers: {
       type: Array,
     },
-    isagroup: {
+    isGroup: {
       type: Boolean,
       default: false,
     },
@@ -20,7 +24,6 @@ const VisitorSchema = new mongoose.Schema(
     mobile: {
       type: String,
       maxlength: [, "Phone Number cannot be more than 20 characters"],
-      unique: [true, "Phone Number already exists"],
     },
     email: {
       type: String,
@@ -30,7 +33,8 @@ const VisitorSchema = new mongoose.Schema(
       type: String,
     },
     host: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Employee",
       required: [true, "Please add host"],
     },
     purpose: {

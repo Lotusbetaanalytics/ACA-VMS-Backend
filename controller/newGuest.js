@@ -37,10 +37,10 @@ exports.createVisitor = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      data: newVisitor,
+      message: "Successfully created",
     });
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 

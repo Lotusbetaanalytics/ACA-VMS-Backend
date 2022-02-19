@@ -8,6 +8,7 @@ const router = require("express").Router();
 
 router.post("/", createOffice);
 router.get("/", getAllOfficeData);
+
 router.get("/search", getAnOffice);
 
 module.exports = router;
