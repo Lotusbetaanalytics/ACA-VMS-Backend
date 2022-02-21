@@ -21,12 +21,6 @@ exports.findAllGuest = async (req, res) => {
 
 exports.createVisitor = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({
-        success: false,
-        message: "No data sent",
-      });
-    }
     const newVisitor = await Visitor.create(req.body);
 
     await Office.findOneAndUpdate(

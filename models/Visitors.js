@@ -35,7 +35,6 @@ const VisitorSchema = new mongoose.Schema(
     host: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Employee",
-      required: [true, "Please add host"],
     },
     purpose: {
       type: String,

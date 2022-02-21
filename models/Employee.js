@@ -16,12 +16,6 @@ const EmployeeSchema = new mongoose.Schema({
     unique: true,
     required: [true, "Please add email"],
   },
-  visitor: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Guest",
-    },
-  ],
   password: {
     type: String,
     required: [true, "Please provide password"],

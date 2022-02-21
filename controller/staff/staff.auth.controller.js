@@ -28,7 +28,7 @@ exports.createStaff = async (req, res) => {
       message: "User created successfully",
     });
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
