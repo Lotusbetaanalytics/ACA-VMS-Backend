@@ -18,3 +18,50 @@ exports.findStaffGuests = async (req, res) => {
     });
   }
 };
+
+exports.guestApproval = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const visitor = await Visitors.findById(id);
+    if (!visitor) {
+      return res.status(404).json({
+        success: false,
+        message: "Visitor not found",
+      });
+    }
+    visitor.status = "Approved";
+    await visitor.save();
+
+    return res.status(200).json({
+      success: true,
+      data: "Approved",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+exports.guestDecline = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const visitor = await Visitors.findById(id);
+    if (!visitor) {
+      return res.status(404).json({
+        success: false,
+        message: "Visitor not found",
+      });
+    }
+    visitor.status = "Rejected";
+    await visitor.save();
+
+    return res.status(200).json({
+      success: true,
+      data: "Rejected",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};

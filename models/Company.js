@@ -25,6 +25,10 @@ const companySchema = new Schema(
         ref: "Guest",
       },
     ],
+    logo: {
+      type: String,
+      default: "no-photo.jpg",
+    },
   },
   { timestamps: true }
 );

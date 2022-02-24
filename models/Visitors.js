@@ -27,7 +27,6 @@ const VisitorSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: [true, "Email already exists"],
     },
     laptop: {
       type: String,
@@ -42,8 +41,8 @@ const VisitorSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
-      default: "pending",
+      enum: ["Pending", "Approved", "Rejected"],
+      default: "Pending",
     },
 
     photo: {

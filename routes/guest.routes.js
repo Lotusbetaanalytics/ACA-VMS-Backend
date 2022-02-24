@@ -6,7 +6,11 @@ const {
   findGuest,
   createReturningGuest,
 } = require("../controller/returningVisitors");
-const { findStaffGuests } = require("../controller/staff/visitor.controller");
+const {
+  findStaffGuests,
+  guestApproval,
+  guestDecline,
+} = require("../controller/staff/visitor.controller");
 const { verifyToken } = require("../middlewares/auth.middleware");
 
 const router = require("express").Router();
@@ -18,6 +22,8 @@ router.post("/returning", createReturningGuest);
 //New Guest
 router.post("/new", createVisitor);
 router.get("/", getPrebookVisitorByToken);
+router.patch("/approve/:id", verifyToken, guestApproval);
+router.patch("/reject/:id", verifyToken, guestDecline);
 
 //Staff Guest
 router.get("/staff", verifyToken, findStaffGuests);

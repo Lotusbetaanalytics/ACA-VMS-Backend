@@ -19,6 +19,9 @@ const FrontdeskSchema = new mongoose.Schema({
   role: {
     type: String,
   },
+  office: {
+    type: String,
+  },
   password: {
     type: String,
     required: [true, "Please add a password"],

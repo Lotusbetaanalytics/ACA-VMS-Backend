@@ -11,6 +11,9 @@ const EmployeeSchema = new mongoose.Schema({
     unique: true,
     required: [true, "Please add mobile number"],
   },
+  office: {
+    type: String,
+  },
   email: {
     type: String,
     unique: true,

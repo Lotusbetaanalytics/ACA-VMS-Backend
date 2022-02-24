@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Guest</title>
+    <style>
+      .container {
+        width: 70vw;
+        height: 40vh;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="container">
+        <h3 style="color: #fff">Hello, <%-frontdesk.firstname%></h3>
+        <p><%-staff.fullname%> has a new visitor.</p>
+        See the visitor's details below:
+        <ul>
+          <li>Name: <%-newVisitor.fullname%></li>
+          <li>Purpose of visit: <%-newVisitor.purpose%></li>
+        </ul>
+        <h4>Visitor's Photo</h4>
+        <img
+          src="<%-newVisitor.photo%>"
+          style="width: 200px; height: 300px"
+          alt="visitor photo"
+        />
+      </div>
+    </div>
+  </body>
+</html>

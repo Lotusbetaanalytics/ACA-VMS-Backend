@@ -1,4 +1,5 @@
 const mongoSanitize = require("express-mongo-sanitize");
+const path = require("path");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const morgan = require("morgan");
@@ -25,7 +26,9 @@ require("./config/db")();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use(require("express-pino-logger")());
+// app.use(require("express-pino-logger")());
+
+app.set("emailViews", path.resolve(__dirname, "views/emails"));
 
 //Sanitize data
 app.use(mongoSanitize());
@@ -54,6 +57,7 @@ app.use("/api/v1/staff", staffRoutes);
 app.use("/api/v1/guest", require("./routes/guest.routes"));
 app.use("/api/v1/office", require("./routes/office.routes"));
 app.use("/api/v1/prebook", require("./routes/prebook.routes"));
+app.use("/api/v1/logs", require("./routes/logs.routes"));
 
 try {
   app.get("/", async (req, res) => {

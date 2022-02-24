@@ -26,7 +26,8 @@ exports.getAllOfficeData = async (req, res) => {
       .populate({
         path: "visitor",
         model: "Guest",
-      });
+      })
+      .sort({ _id: -1 });
 
     return res.status(200).json({
       success: true,
