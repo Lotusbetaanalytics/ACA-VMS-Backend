@@ -20,23 +20,17 @@ exports.getFrontDeskDashboardData = async (req, res) => {
 
     let queryDate = new Date(q); //convert query date to date object
 
-    queryDate = `${queryDate.getFullYear()}-${
-      queryDate.getMonth() + 1
-    }-${queryDate.getDate()}`; //get date (year-month-day)
+    queryDate = queryDate.toLocaleDateString(); //get date (year-month-day)
 
     const filtered = officeVisitors[0].visitor.filter(({ createdAt }) => {
-      createdAt = `${createdAt.getFullYear()}-${
-        createdAt.getMonth() + 1
-      }-${createdAt.getDate()}`;
+      createdAt = new Date(createdAt).toLocaleDateString();
       return createdAt === queryDate;
     });
 
     //Find pending guests in an office
     const pendingGuests = officeVisitors[0].visitor.filter(
       ({ status, createdAt }) => {
-        createdAt = `${createdAt.getFullYear()}-${
-          createdAt.getMonth() + 1
-        }-${createdAt.getDate()}`;
+        createdAt = new Date(createdAt).toLocaleDateString();
         return status == "Pending" && createdAt === queryDate;
       }
     );
@@ -44,9 +38,7 @@ exports.getFrontDeskDashboardData = async (req, res) => {
     //   Checked In Guests
     const checkedIn = officeVisitors[0].visitor.filter(
       ({ checkedIn, createdAt }) => {
-        createdAt = `${createdAt.getFullYear()}-${
-          createdAt.getMonth() + 1
-        }-${createdAt.getDate()}`;
+        createdAt = new Date(createdAt).toLocaleDateString();
         return checkedIn === true && createdAt === queryDate;
       }
     );
@@ -54,9 +46,7 @@ exports.getFrontDeskDashboardData = async (req, res) => {
     //Checked Out Guests
     const checkedOut = officeVisitors[0].visitor.filter(
       ({ checkedOut, createdAt }) => {
-        createdAt = `${createdAt.getFullYear()}-${
-          createdAt.getMonth() + 1
-        }-${createdAt.getDate()}`;
+        createdAt = new Date(createdAt).toLocaleDateString();
         return checkedOut === true && createdAt === queryDate;
       }
     );
@@ -69,14 +59,13 @@ exports.getFrontDeskDashboardData = async (req, res) => {
     });
 
     const officePrebooks = prebooked.filter(({ host, createdAt }) => {
-      createdAt = `${createdAt.getFullYear()}-${
-        createdAt.getMonth() + 1
-      }-${createdAt.getDate()}`;
+      createdAt = new Date(createdAt).toLocaleDateString();
       return host.office === findFrontDesk.office && createdAt === queryDate;
     });
 
     //find office staffs
     const officeStaffs = await Employees.find({ office: findFrontDesk.office });
+    const frontDesks = await FrontDesk.find({ office: findFrontDesk.office });
 
     return res.status(200).json({
       data: {
@@ -86,6 +75,7 @@ exports.getFrontDeskDashboardData = async (req, res) => {
         checkedOut,
         prebooks: officePrebooks,
         staff: officeStaffs,
+        admin: frontDesks,
       },
       success: true,
     });
