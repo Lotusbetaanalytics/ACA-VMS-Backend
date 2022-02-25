@@ -2,10 +2,16 @@ const Office = require("../models/Company");
 
 exports.createOffice = async (req, res) => {
   try {
-    const office = await Office.create({ office: req.body.office });
+    const findOffice = await Office.findOne({ office: req.body.office });
+    if (findOffice) {
+      return res.status(401).json({
+        success: false,
+        message: "Office already exists",
+      });
+    }
+    await Office.create({ office: req.body.office });
     return res.status(201).json({
       success: true,
-      data: office,
     });
   } catch (err) {
     return res.status(500).json({ message: err.message });

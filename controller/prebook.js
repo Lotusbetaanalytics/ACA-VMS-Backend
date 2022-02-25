@@ -61,7 +61,6 @@ exports.getStaffPrebooks = async (req, res) => {
 // @access  Private
 exports.createPrebook = async (req, res) => {
   try {
-    console.log(req.user);
     const newPrebook = await Prebook.create(req.body);
 
     if (!newPrebook) {

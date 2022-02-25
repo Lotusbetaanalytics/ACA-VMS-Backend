@@ -1,4 +1,5 @@
 const Office = require("../models/Company");
+const Visitors = require("../models/Visitors");
 
 exports.findLogsByOffice = async (req, res) => {
   try {
@@ -10,13 +11,6 @@ exports.findLogsByOffice = async (req, res) => {
       })
       .sort({ _id: -1 });
 
-    if (!q) {
-      return res.status(200).json({
-        success: true,
-        data: office,
-      });
-    }
-
     const filtered = office
       .filter(({ office }) => office === q)
       .sort((a, b) => {
@@ -26,6 +20,25 @@ exports.findLogsByOffice = async (req, res) => {
     const { visitor } = filtered[0];
 
     return res.status(200).json({ data: visitor, success: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: err.message,
+      success: false,
+    });
+  }
+};
+exports.allLogs = async (req, res) => {
+  try {
+    const allVisitors = await Visitors.find({})
+      .populate({
+        path: "host",
+        model: "Employee",
+        select: "fullname",
+      })
+      .sort({ _id: -1 });
+
+    return res.status(200).json({ data: allVisitors, success: true });
   } catch (err) {
     console.log(err);
     return res.status(500).json({

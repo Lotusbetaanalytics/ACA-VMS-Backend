@@ -44,6 +44,14 @@ const VisitorSchema = new mongoose.Schema(
       enum: ["Pending", "Approved", "Rejected"],
       default: "Pending",
     },
+    checkedIn: {
+      type: Boolean,
+      default: false,
+    },
+    checkedOut: {
+      type: Boolean,
+      default: false,
+    },
 
     photo: {
       type: String,

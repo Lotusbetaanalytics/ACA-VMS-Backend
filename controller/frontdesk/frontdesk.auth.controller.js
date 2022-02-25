@@ -27,7 +27,6 @@ exports.createFrontDeskUser = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      data: createdFrontDesk,
     });
   } catch (err) {
     res.status(500).json({ msg: err.message });

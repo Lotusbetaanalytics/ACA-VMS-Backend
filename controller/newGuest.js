@@ -2,6 +2,7 @@ const Visitor = require("../models/Visitors");
 const Office = require("../models/Company");
 const PreBook = require("../models/PreBook");
 const Employees = require("../models/Employee");
+const Notification = require("../models/Notification");
 const sendMail = require("../config/mail");
 const path = require("path");
 const { renderTemplate } = require("../utils/templates");
@@ -26,11 +27,20 @@ exports.findAllGuest = async (req, res) => {
 exports.createVisitor = async (req, res) => {
   try {
     const newVisitor = await Visitor.create(req.body);
-    await Office.findOneAndUpdate(
+
+    const officeUpdate = await Office.findOneAndUpdate(
       { office: req.body.office },
       { $push: { visitor: newVisitor._id } },
       { new: true }
     );
+
+    if (!officeUpdate) {
+      return res.status(404).json({
+        success: false,
+        message: "Office not found",
+      });
+    }
+
     const staff = await Employees.findById(req.body.host);
     if (!staff) {
       return res.status(404).json({
@@ -38,24 +48,27 @@ exports.createVisitor = async (req, res) => {
         message: "Staff not found",
       });
     }
-    const res = await Office.find({ office: req.body.office }).populate({
+    const findOffice = await Office.find({ office: req.body.office }).populate({
       path: "frontdesk",
-      select: "firstname email",
+      select: "firstname email office",
     });
 
-    if (!res) {
+    if (!findOffice) {
       return res.status(404).json({
         success: false,
         message: "Office not found",
       });
     }
-    const frontdesk = res[0].frontdesk[0];
-
+    const frontdesk = findOffice[0].frontdesk[0];
+    const host = `${req.protocol}://${req.hostname}`;
+    const url = new URL(host);
+    url.pathname = "/staff/guest";
     const emailTemplate = path.join(req.app.get("views"), "newGuest.ejs");
     const content = renderTemplate(emailTemplate, {
       frontdesk,
       staff,
       newVisitor,
+      url: url.href,
     });
     /*
     let htmlMessage = `
@@ -110,17 +123,22 @@ exports.createVisitor = async (req, res) => {
       email: frontdesk.email,
       cc: staff.email,
       subject: "New Visitor",
-      message: `Hello, <b>${staff.fullname}</b> has scheduled you for a visit. `,
+      message: "",
       html: content,
     };
+
+    const alert = new Notification({ notify: "New Guest Alert!" });
     await sendMail(options);
-    res.status(200).json({
+    await alert.save();
+
+    return res.status(200).json({
       success: true,
-      message: "Successfully created",
     });
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json({ message: err.message });
+    return res
+      .status(500)
+      .json({ message: "An error occured! Check your logs." });
   }
 };
 

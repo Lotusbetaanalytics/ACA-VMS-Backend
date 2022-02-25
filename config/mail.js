@@ -1,20 +1,20 @@
 const nodemailer = require("nodemailer");
 
-const sendEmail = async (options) => {
+const sendEmail = async function (options) {
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: false,
+    // host: process.env.SMTP_HOST,
+    // port: process.env.SMTP_PORT,
+    // secure: false,
     auth: {
-      user: process.env.SMTP_EMAIL,
-      pass: process.env.SMTP_PASSWORD,
+      user: "ejoor0000@gmail.com",
+      pass: "Emmanuel.22",
     },
-    tls: { ciphers: "SSLv3" },
-    service: "Outlook365",
-    // tls: {
-    //   // do not fail on invalid certs
-    //   rejectUnauthorized: false,
-    // },
+    // tls: { ciphers: "SSLv3" },
+    service: "GMAIL",
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false,
+    },
   });
 
   const message = {
@@ -25,8 +25,12 @@ const sendEmail = async (options) => {
     text: options.message,
     html: options.html,
   };
-  const info = await transporter.sendMail(message);
-  console.log("Message sent: %s", info.messageId);
+
+  transporter.sendMail(message, (err, info) => {
+    if (!err) {
+      console.log("message sent " + info.response);
+    }
+  });
 };
 
 module.exports = sendEmail;

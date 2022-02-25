@@ -58,6 +58,10 @@ app.use("/api/v1/guest", require("./routes/guest.routes"));
 app.use("/api/v1/office", require("./routes/office.routes"));
 app.use("/api/v1/prebook", require("./routes/prebook.routes"));
 app.use("/api/v1/logs", require("./routes/logs.routes"));
+app.use(
+  "/api/v1/dashboard",
+  require("./routes/frontdesk/frontdesk.dashboard.routes")
+);
 
 try {
   app.get("/", async (req, res) => {
