@@ -119,7 +119,7 @@ exports.createVisitor = async (req, res) => {
 </html>
     `;
     */
-    let options = {
+    const options = {
       email: frontdesk.email,
       cc: staff.email,
       subject: "New Visitor",
