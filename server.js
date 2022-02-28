@@ -7,32 +7,27 @@ require("colors");
 require("dotenv").config();
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require("twilio")(accountSid, authToken);
 const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
 
 // import routes
 const frontDeskAuthRoutes = require("./routes/frontdesk/frontdesk.auth.routes");
 const staffRoutes = require("./routes/staff/staff.auth.routes");
-const notifyUser = require("./utils/notify");
+// const notifyUser = require("./utils/notify");
 
 // configure express
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
-});
+// const server = http.createServer(app);
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*",
+//   },
+// });
 
 //connection to the db
 require("./config/db")();
 
 // set up app
-notifyUser(io);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
@@ -75,13 +70,6 @@ app.use(
 
 try {
   app.get("/", async (req, res) => {
-    let result = await client.messages.create({
-      body: "This message is a test",
-      from: process.env.SENDER_NUMBER,
-      to: "+2348189844711",
-    });
-    console.log(result);
-
     return res
       .status(200)
       .json({ msg: "This is the api for aca vms solution" });
@@ -92,7 +80,10 @@ try {
 
 const PORT = process.env.PORT || 4000;
 
-server.listen(PORT, console.log(`Server running on port ${PORT}`.yellow));
+const server = app.listen(
+  PORT,
+  console.log(`Server running on port ${PORT}`.yellow)
+);
 
 //Handle unhandled promise rejections
 process.on("unhandledRejection", (err, promise) => {
