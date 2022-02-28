@@ -2,19 +2,19 @@ const nodemailer = require("nodemailer");
 
 const sendEmail = async function (options) {
   const transporter = nodemailer.createTransport({
-    // host: process.env.SMTP_HOST,
-    // port: process.env.SMTP_PORT,
-    // secure: false,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: false,
     auth: {
-      user: "ejoor0000@gmail.com",
-      pass: "Emmanuel.22",
+      user: process.env.SMTP_EMAIL,
+      pass: process.env.SMTP_PASSWORD,
     },
-    // tls: { ciphers: "SSLv3" },
-    service: "GMAIL",
-    tls: {
-      // do not fail on invalid certs
-      rejectUnauthorized: false,
-    },
+    tls: { ciphers: "SSLv3" },
+    service: "Outlook365",
+    // tls: {
+    //   // do not fail on invalid certs
+    //   rejectUnauthorized: false,
+    // },
   });
 
   const message = {

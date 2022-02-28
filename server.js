@@ -11,18 +11,28 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require("twilio")(accountSid, authToken);
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 
 // import routes
 const frontDeskAuthRoutes = require("./routes/frontdesk/frontdesk.auth.routes");
 const staffRoutes = require("./routes/staff/staff.auth.routes");
+const notifyUser = require("./utils/notify");
 
 // configure express
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 //connection to the db
 require("./config/db")();
 
 // set up app
+notifyUser(io);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
@@ -82,10 +92,7 @@ try {
 
 const PORT = process.env.PORT || 4000;
 
-const server = app.listen(
-  PORT,
-  console.log(`Server running on port ${PORT}`.yellow)
-);
+server.listen(PORT, console.log(`Server running on port ${PORT}`.yellow));
 
 //Handle unhandled promise rejections
 process.on("unhandledRejection", (err, promise) => {

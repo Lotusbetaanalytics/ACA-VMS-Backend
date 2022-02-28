@@ -7,6 +7,10 @@ const Employee = require("../../models/Employee");
 const FrontDesk = require("../../models/FrontDesk");
 const { renderTemplate } = require("../../utils/templates");
 const path = require("path");
+require("dotenv").config();
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require("twilio")(accountSid, authToken);
 
 exports.findStaffGuests = async (req, res) => {
   try {
@@ -72,6 +76,14 @@ exports.guestApproval = async (req, res) => {
     const url = new URL(host);
     url.pathname = "/staff/guest";
 
+    const msgResult = await client.messages.create({
+      body: `${visitor.fullname} has been approved by ${findHost.fullname} for ${visitor.purpose} ${url.href}`,
+      from: process.env.SENDER_NUMBER,
+      to: "+2348189844711",
+    });
+
+    console.log(msgResult);
+
     const emailTemplate = path.join(req.app.get("views"), "guestApproval.ejs");
     const content = renderTemplate(emailTemplate, {
       url: url.href,
@@ -118,6 +130,12 @@ exports.guestDecline = async (req, res) => {
     const host = `${req.protocol}://${req.hostname}`;
     const url = new URL(host);
     url.pathname = "/staff/guest";
+
+    await client.messages.create({
+      body: `${visitor.fullname} has been rejected by ${findHost.fullname} for ${visitor.purpose} ${url.href}`,
+      from: process.env.SENDER_NUMBER,
+      to: "+2348189844711",
+    });
 
     const emailTemplate = path.join(req.app.get("views"), "guestRejection.ejs");
     const content = renderTemplate(emailTemplate, {
@@ -166,6 +184,12 @@ exports.guestCheckOut = async (req, res) => {
     const url = new URL(host);
     url.pathname = "/staff/guest";
 
+    await client.messages.create({
+      body: `${visitor.fullname} has been checked out. ${url.href}`,
+      from: process.env.SENDER_NUMBER,
+      to: "+2348189844711",
+    });
+
     const emailTemplate = path.join(req.app.get("views"), "checkOutNotice.ejs");
     const content = renderTemplate(emailTemplate, {
       url: url.href,
@@ -212,6 +236,12 @@ exports.guestCheckIn = async (req, res) => {
     const host = `${req.protocol}://${req.hostname}`;
     const url = new URL(host);
     url.pathname = "/staff/guest";
+
+    await client.messages.create({
+      body: `${visitor.fullname} has been checked in. ${url.href}`,
+      from: process.env.SENDER_NUMBER,
+      to: "+2348189844711",
+    });
 
     const emailTemplate = path.join(req.app.get("views"), "checkInNotice.ejs");
     const content = renderTemplate(emailTemplate, {
