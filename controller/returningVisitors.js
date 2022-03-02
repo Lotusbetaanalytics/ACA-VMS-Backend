@@ -6,10 +6,7 @@ exports.findGuest = async (req, res) => {
     //find a guest
     const { phone } = req.query;
 
-    const guest = await Visitors.find({ mobile: phone }).populate({
-      path: "user",
-      select: "fullname",
-    });
+    const guest = await Visitors.find({ mobile: phone });
 
     if (!guest) {
       return res.status(404).json({
