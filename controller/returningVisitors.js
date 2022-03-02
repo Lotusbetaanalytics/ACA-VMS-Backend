@@ -1,29 +1,26 @@
 const ReturningGuest = require("../models/ReturningVisitors");
+const Visitors = require("../models/Visitors");
 
 exports.findGuest = async (req, res) => {
   try {
     //find a guest
-    const { fullname } = req.query;
+    const { phone } = req.query;
 
-    const guest = await ReturningGuest.find({}).populate({
+    const guest = await Visitors.find({ mobile: phone }).populate({
       path: "user",
-      select: "fullname company email mobile",
+      select: "fullname",
     });
 
-    if (!fullname) {
-      return res.status(200).json({
-        success: true,
-        guest,
+    if (!guest) {
+      return res.status(404).json({
+        success: false,
+        message: "Guest not found",
       });
     }
 
-    const guestFound = guest.filter(({ user }) =>
-      user.fullname.toLowerCase().includes(fullname.toLowerCase())
-    );
-
     return res.status(200).json({
       success: true,
-      guest: guestFound,
+      guest,
     });
   } catch (err) {
     res.status(500).json({ msg: err.message });
@@ -38,10 +35,9 @@ exports.createReturningGuest = async (req, res) => {
         message: "No data sent",
       });
     }
-    const returningVisitor = await ReturningGuest.create(req.body);
+    await ReturningGuest.create(req.body);
     return res.status(200).json({
       success: true,
-      returningVisitor,
     });
   } catch (err) {
     res.status(500).json({ msg: err.message });

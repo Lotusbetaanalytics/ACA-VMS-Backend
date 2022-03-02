@@ -1,8 +1,10 @@
 const notifyUser = (io) => {
   io.on("connection", (socket) => {
-    console.log("New client connected");
-    socket.on("message", (data) => {
-      io.emit("alert", data);
+    console.log("Connected");
+    socket.emit("connected", "from server");
+    socket.on("newGuest", () => {
+      console.log("new guest");
+      io.emit("newGuest", "from server");
     });
   });
 };

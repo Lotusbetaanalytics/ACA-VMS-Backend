@@ -8,20 +8,25 @@ require("dotenv").config();
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const express = require("express");
+const { Server } = require("socket.io");
+const http = require("http");
 
 // import routes
 const frontDeskAuthRoutes = require("./routes/frontdesk/frontdesk.auth.routes");
 const staffRoutes = require("./routes/staff/staff.auth.routes");
-// const notifyUser = require("./utils/notify");
+const notifyUser = require("./utils/notify");
 
 // configure express
 const app = express();
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*",
-//   },
-// });
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+//setup socket.io
+notifyUser(io);
 
 //connection to the db
 require("./config/db")();
@@ -67,6 +72,7 @@ app.use(
   "/api/v1/dashboard",
   require("./routes/frontdesk/frontdesk.dashboard.routes")
 );
+app.use("/api/v1/returning", require("./routes/returningGuest.routes"));
 
 try {
   app.get("/", async (req, res) => {
@@ -80,10 +86,7 @@ try {
 
 const PORT = process.env.PORT || 4000;
 
-const server = app.listen(
-  PORT,
-  console.log(`Server running on port ${PORT}`.yellow)
-);
+server.listen(PORT, console.log(`Server running on port ${PORT}`.yellow));
 
 //Handle unhandled promise rejections
 process.on("unhandledRejection", (err, promise) => {
