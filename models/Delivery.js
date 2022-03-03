@@ -1,35 +1,16 @@
 const mongoose = require("mongoose");
 
-const VisitorSchema = new mongoose.Schema(
+const DeliverySchema = new mongoose.Schema(
   {
     fullname: {
       type: String,
-      required: [true, "Please add name"],
     },
-    title: {
-      type: String,
-    },
-    // groupMembers: {
-    //   type: Array,
-    // },
-    // isGroup: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+
     company: {
       type: String,
       required: [true, "Please add company"],
     },
-    mobile: {
-      type: String,
-      maxlength: [, "Phone Number cannot be more than 20 characters"],
-    },
-    email: {
-      type: String,
-    },
-    tag: {
-      type: String,
-    },
+
     host: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Employee",
@@ -60,4 +41,4 @@ const VisitorSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Guest", VisitorSchema);
+module.exports = mongoose.model("Delivery", DeliverySchema);

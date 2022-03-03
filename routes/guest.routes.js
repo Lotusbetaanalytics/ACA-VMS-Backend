@@ -1,3 +1,4 @@
+const { createDelivery } = require("../controller/delivery.controller");
 const {
   createVisitor,
   getPrebookVisitorByToken,
@@ -23,6 +24,7 @@ router.post("/returning", createReturningGuest);
 
 //New Guest
 router.post("/new", createVisitor);
+router.post("/delivery/new", createDelivery);
 router.get("/", getPrebookVisitorByToken);
 router.patch("/approve/:id", verifyToken, guestApproval);
 router.patch("/reject/:id", verifyToken, guestDecline);
